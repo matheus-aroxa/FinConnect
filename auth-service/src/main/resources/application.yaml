@@ -5,11 +5,18 @@ spring:
     url: jdbc:postgresql://localhost:5432/users_db
     username: root
     password: root
-  jpa:
-    hibernate:
-      ddl-auto: update
-      dialect: org.hibernate.dialect.PostgreSQLDialect
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
 
 jwt:
-  secret: ${JWT_SECRET}
-  expiration: ${JWT_EXPIRATION}
+  secret: ${JWT_SECRET:f64fefbfe95bfad56f2e81c8218fee610a72906cc1cbe4abc14b6d9684318826}
+  expiration: ${JWT_EXPIRATION:3600000}
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+
+server:
+  port: 8080
