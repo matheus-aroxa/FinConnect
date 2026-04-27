@@ -21,6 +21,26 @@ services:
       - POSTGRES_PASSWORD=${ACCOUNTSDB_PASSWORD}
       - POSTGRES_DB=${ACCOUNTSDB_DB}
 
+  eureka-server:
+    build: ./eureka
+    ports: 
+      - 8761:8761
+
+  auth-service:
+    build: ./auth-service
+    ports: 
+      - 8080:8080
+    environment:
+      DB_URL: ${USERSDB_URL:-jdbc:postgresql://users_db:5432/users_db}
+      DB_USERNAME: ${USERSDB_USERNAME:-root}
+      DB_PASSWORD: ${USERSDB_PASSWORD:-root}
+      JWT_SECRET: ${JWT_SECRET:-f64fefbfe95bfad56f2e81c8218fee610a72906cc1cbe4abc14b6d9684318826}
+      JWT_EXPIRATION: ${JWT_EXPIRATION:-3600000}
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: ${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE:-http://eureka-server:8761/eureka/}
+    depends_on: 
+      - users_db
+      - eureka-server
+      
 volumes:
   users_volume:
   accounts_volume:
