@@ -19,7 +19,7 @@ import com.finconnect.auth_service.repository.UsersRepository;
 import com.finconnect.auth_service.util.JwtUtil;
 
 @RestController
-@RequestMapping("api/auth")
+@RequestMapping("/api/auth")
 public class AuthController {
 
     @Autowired
@@ -34,7 +34,7 @@ public class AuthController {
     @Autowired
     private JwtUtil jwtUtil;
     
-    @PostMapping("signin")
+    @PostMapping("/signin")
     public String authenticateUser(@RequestBody SignInRequest request) {
         Authentication authentication = authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(request.username(), request.password())
@@ -44,7 +44,7 @@ public class AuthController {
         return jwtUtil.generateToken(userDetails.getUsername());
     }
 
-    @PostMapping("signup")
+    @PostMapping("/signup")
     public String registerUser(@RequestBody SignUpRequest request) throws BadRequestException {
         if(usersRepository.findByEmail(request.email()).isPresent()) return "User alredy exists";
 

@@ -23,4 +23,9 @@ eureka:
     prefer-ip-address: true
 
 server:
-  port: 8080
+  port: 8070
+
+logging:
+  level:
+    org.springframework.web: DEBUG
+    org.springframework.security: DEBUG
