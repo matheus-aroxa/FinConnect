@@ -1,8 +1,6 @@
 services:
   users_db:
     image: postgres:latest
-    ports:
-      - 5432:5432
     volumes: 
       - users_volume:/var/lib/postgresql
     environment:
@@ -12,8 +10,6 @@ services:
 
   accounts_db:
     image: postgres:latest
-    ports:
-      - 5431:5432
     volumes: 
       - accounts_volume:/var/lib/postgresql
     environment:
@@ -26,10 +22,18 @@ services:
     ports: 
       - 8761:8761
 
+  gateway:
+    build: ./gateway
+    ports: 
+    - 8080:8080
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: ${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE:-http://eureka-server:8761/eureka/}
+      JWT_SECRET: ${JWT_SECRET:-f64fefbfe95bfad56f2e81c8218fee610a72906cc1cbe4abc14b6d9684318826}
+    depends_on:
+      - eureka-server
+
   auth-service:
     build: ./auth-service
-    ports: 
-      - 8080:8080
     environment:
       DB_URL: ${USERSDB_URL:-jdbc:postgresql://users_db:5432/users_db}
       DB_USERNAME: ${USERSDB_USERNAME:-root}
