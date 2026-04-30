@@ -3,10 +3,17 @@ services:
     image: postgres:latest
     volumes: 
       - users_volume:/var/lib/postgresql
+    ports:
+      - 5432:5432
     environment:
       - POSTGRES_USER=${USERSDB_USERNAME}
       - POSTGRES_PASSWORD=${USERSDB_PASSWORD}
       - POSTGRES_DB=${USERSDB_DB}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${USERSDB_USERNAME} -d ${USERSDB_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   accounts_db:
     image: postgres:latest
@@ -16,11 +23,22 @@ services:
       - POSTGRES_USER=${ACCOUNTSDB_USERNAME}
       - POSTGRES_PASSWORD=${ACCOUNTSDB_PASSWORD}
       - POSTGRES_DB=${ACCOUNTSDB_DB}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${ACCOUNTSDB_USERNAME} -d ${ACCOUNTSDB_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   eureka-server:
     build: ./eureka
     ports: 
       - 8761:8761
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8761/"]
+      interval: 20s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
 
   gateway:
     build: ./gateway
@@ -30,7 +48,8 @@ services:
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: ${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE:-http://eureka-server:8761/eureka/}
       JWT_SECRET: ${JWT_SECRET:-f64fefbfe95bfad56f2e81c8218fee610a72906cc1cbe4abc14b6d9684318826}
     depends_on:
-      - eureka-server
+      eureka-server:
+        condition: service_healthy
 
   auth-service:
     build: ./auth-service
@@ -42,8 +61,25 @@ services:
       JWT_EXPIRATION: ${JWT_EXPIRATION:-3600000}
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: ${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE:-http://eureka-server:8761/eureka/}
     depends_on: 
-      - users_db
-      - eureka-server
+      users_db:
+        condition: service_healthy
+      eureka-server:
+        condition: service_healthy
+
+  account-service:
+    build: ./account-service
+    environment:
+      DB_URL: ${ACCOUNTSDB_URL:-jdbc:postgresql://accounts_db:5432/accounts_db}
+      DB_USERNAME: ${ACCOUNTSDB_USERNAME:-root}
+      DB_PASSWORD: ${ACCOUNTSDB_PASSWORD:-root}
+      JWT_SECRET: ${JWT_SECRET:-f64fefbfe95bfad56f2e81c8218fee610a72906cc1cbe4abc14b6d9684318826}
+      JWT_EXPIRATION: ${JWT_EXPIRATION:-3600000}
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: ${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE:-http://eureka-server:8761/eureka/}
+    depends_on: 
+      accounts_db:
+        condition: service_healthy
+      eureka-server:
+        condition: service_healthy
       
 volumes:
   users_volume:

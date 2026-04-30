@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.Random;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.finconnect.account_service.dto.AccountResponse;
 import com.finconnect.account_service.dto.CreateAccount;
 import com.finconnect.account_service.entity.Account;
 import com.finconnect.account_service.entity.Status;
@@ -15,7 +16,7 @@ public class AccountService {
     @Autowired
     private AccountRepository repository;
 
-    public void createAccount(CreateAccount request) {
+    public AccountResponse createAccountOnSignUp(CreateAccount request) {
         Account account = new Account();
         account.setUserId(request.uuid());
         account.setAgency(generateRandomAgencyNumber());
@@ -23,7 +24,16 @@ public class AccountService {
         account.setBalance(new BigDecimal("0.0"));
         account.setStatus(Status.ACTIVE);
 
-        this.repository.save(account);
+        var acc = this.repository.save(account);
+
+        return new AccountResponse(
+            acc.getId(),
+            acc.getUserId(),
+            acc.getAgency(),
+            acc.getAccountNumber(),
+            acc.getBalance(),
+            acc.getStatus()
+        );
     }
 
     private String generateRandomAgencyNumber() {
