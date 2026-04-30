@@ -3,8 +3,7 @@ CREATE TABLE users (
     full_name VARCHAR(255) NOT NULL,
     cpf VARCHAR(11) NOT NULL UNIQUE,
     email VARCHAR(100) NOT NULL UNIQUE,
-    password VARCHAR(255) NOT NULL,
-    roles text[] NOT NULL
+    password VARCHAR(255) NOT NULL
 );
 
-CREATE UNIQUE INDEX idx_user_cpf ON users(cpf);
+CREATE INDEX idx_users_cpf ON users(cpf);

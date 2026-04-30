@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import com.finconnect.auth_service.exception.exceptions.ExpiredTokenException;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
@@ -61,6 +62,7 @@ public class JwtUtil {
             logger.error("Invalid JWT token: " + e.getMessage());
         } catch (ExpiredJwtException e) {
             logger.error("JWT token is expired: " + e.getMessage());
+            throw new ExpiredTokenException("Token expired: " + token);
         } catch (UnsupportedJwtException e) {
             logger.error("JWT token is unsupported: " + e.getMessage());
         } catch (IllegalArgumentException e) {

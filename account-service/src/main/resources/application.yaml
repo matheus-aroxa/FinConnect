@@ -2,9 +2,9 @@ spring:
   application:
     name: account-service
   datasource:
-    url: jdbc:postgresql://localhost:5431/accounts_db
-    username: root
-    password: root
+    url: ${ACCOUNTSDB_URL:jdbc:postgresql://accounts_db:5432/accounts_db}
+    username: ${ACCOUNTSDB_USERNAME:root}
+    password: ${ACCOUNTSDB_PASSWORD:root}
   flyway:
     enabled: true
     baseline-on-migrate: true
@@ -13,6 +13,14 @@ eureka:
   client:
     register-with-eureka: true
     fetch-registry: true
+    service-url:
+      defaultZone: ${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE}
+  instance:
+    prefer-ip-address: true
   
 server:
-  port: 8090
+  port: 0
+
+logging:
+  level:
+   root: DEBUG
