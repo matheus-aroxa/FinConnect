@@ -17,6 +17,8 @@ services:
 
   accounts_db:
     image: postgres:latest
+    ports:
+      - 5433:5432
     volumes: 
       - accounts_volume:/var/lib/postgresql
     environment:

@@ -61,7 +61,7 @@ public class AuthService {
 
         var user = usersRepository.save(createAdminUser(request));
 
-        return accountClient.createAccountOnSignUp(new CreateAccount(user.getId()));
+        return accountClient.createAccountOnSignUp(new CreateAccount(user.getCpf()));
     }
     //-------------------------//----------------------------//-------------------------------//-----------------------
     private Users createAdminUser(SignUpRequest request) {

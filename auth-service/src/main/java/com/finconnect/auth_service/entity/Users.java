@@ -1,9 +1,7 @@
 package com.finconnect.auth_service.entity;
 
 import java.util.Set;
-import java.util.UUID;
 import org.hibernate.validator.constraints.br.CPF;
-
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
@@ -11,8 +9,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.validation.constraints.Email;
@@ -23,16 +19,12 @@ import lombok.Data;
 @Data
 public class Users {
     
+    @CPF
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    private String cpf;
 
     @NotBlank
     private String fullName;
-
-    @NotBlank
-    @CPF
-    private String cpf;
 
     @Email
     @NotBlank
@@ -42,7 +34,7 @@ public class Users {
     private String password;
 
     @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
+    @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_cpf"))
     @Enumerated(EnumType.STRING)
     @Column(name = "role")
     private Set<Role> roles; 
