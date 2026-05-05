@@ -53,7 +53,8 @@ public class AccountService {
     }
 
     @Transactional
-    public Account debitAmountFromAccount(DebtFromAccountRequest request) throws InsufficientBalanceException {
+    public AccountResponse debitAmountFromAccount(DebtFromAccountRequest request) throws InsufficientBalanceException {
+        logger.info("Trying to debt value from account");
         Account account = findAccountByCpf(request.cpf()).orElseThrow(() -> new AccountNotFoundException());
 
         if(account.getBalance().compareTo(request.amount()) == -1) {
@@ -64,17 +65,35 @@ public class AccountService {
         logger.info("Debiting amount from account");
         account.setBalance(account.getBalance().subtract(request.amount()));
 
-        return this.repository.save(account);
+        var result = this.repository.save(account);
+
+        return new AccountResponse(
+            result.getCpf(),
+            result.getAgency(),
+            result.getAccountNumber(),
+            result.getBalance(),
+            result.getStatus()
+        );
     }
 
     @Transactional
-    public Account creditAccount(CreditAccountRequest request) {
+    public AccountResponse creditAccount(CreditAccountRequest request) {
+        logger.info("Trying to credit value to the account");
+
         Account account = findAccountByCpf(request.cpf()).orElseThrow(() -> new AccountNotFoundException());
 
         logger.info("Crediting amount to account");
         account.setBalance(account.getBalance().add(request.amount()));
 
-        return this.repository.save(account);
+        var result = this.repository.save(account);
+
+        return new AccountResponse(
+            result.getCpf(),
+            result.getAgency(),
+            result.getAccountNumber(),
+            result.getBalance(),
+            result.getStatus()
+        );
     }
 
     public Optional<Account> findAccountByCpf(String cpf) {

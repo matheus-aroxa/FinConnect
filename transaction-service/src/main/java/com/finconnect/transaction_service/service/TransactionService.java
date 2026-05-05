@@ -1,0 +1,59 @@
+package com.finconnect.transaction_service.service;
+
+import java.util.Date;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import com.finconnect.transaction_service.dto.CreditAccountRequest;
+import com.finconnect.transaction_service.dto.DebtFromAccountRequest;
+import com.finconnect.transaction_service.dto.TransferRequest;
+import com.finconnect.transaction_service.entity.Status;
+import com.finconnect.transaction_service.entity.Transaction;
+import com.finconnect.transaction_service.entity.Type;
+import com.finconnect.transaction_service.feign.AccountClient;
+import com.finconnect.transaction_service.repository.TransactionRepository;
+
+@Service
+public class TransactionService {
+    
+    private static final Logger logger = LoggerFactory.getLogger(TransactionService.class);
+    
+    @Autowired
+    private TransactionRepository transactionRepository;
+
+    @Autowired
+    private AccountClient accountClient;
+
+    //---------------------------//-------------------------//--------------------------------//------------------
+    @Transactional
+    public String transfer(TransferRequest request) {
+        logger.info("Trying to transfer between accounts");
+        
+        Transaction transaction = new Transaction();
+        transaction.setOriginCpf(request.origin());
+        transaction.setDestinationCpf(request.destination());
+        transaction.setAmount(request.amount());
+        transaction.setCreatedAt(new Date());
+        transaction.setTransactionType(Type.TRANSFER);
+
+        try {
+            accountClient.debitAmountFromAccount(new DebtFromAccountRequest(request.origin(), request.amount()));
+
+            accountClient.creditAccount(new CreditAccountRequest(request.destination(), request.amount()));
+            transaction.setTransactionStatus(Status.COMPLETED);
+
+            this.transactionRepository.save(transaction);
+            return "Transaction completed";
+        } catch (Exception e) {
+            logger.error("Transaction failed");
+            logger.error("Error: " + e.getMessage());
+            logger.error("StackTrace: " + e.getStackTrace());
+            transaction.setTransactionStatus(Status.FAILED);
+            this.transactionRepository.save(transaction);
+            return "Transaction failed";
+        }
+    }
+    //---------------------------//-------------------------//--------------------------------//------------------
+}
