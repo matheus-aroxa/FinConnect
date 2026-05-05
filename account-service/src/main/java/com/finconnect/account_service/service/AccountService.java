@@ -7,6 +7,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.finconnect.account_service.dto.AccountResponse;
 import com.finconnect.account_service.dto.CreateAccount;
 import com.finconnect.account_service.dto.CreditAccountRequest;
@@ -50,6 +52,7 @@ public class AccountService {
         return String.format("%04d", number);
     }
 
+    @Transactional
     public Account debitAmountFromAccount(DebtFromAccountRequest request) throws InsufficientBalanceException {
         Account account = findAccountByCpf(request.cpf()).orElseThrow(() -> new AccountNotFoundException());
 
@@ -64,6 +67,7 @@ public class AccountService {
         return this.repository.save(account);
     }
 
+    @Transactional
     public Account creditAccount(CreditAccountRequest request) {
         Account account = findAccountByCpf(request.cpf()).orElseThrow(() -> new AccountNotFoundException());
 

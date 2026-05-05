@@ -11,11 +11,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 import com.finconnect.auth_service.dto.AccountResponse;
 import com.finconnect.auth_service.dto.CreateAccount;
 import com.finconnect.auth_service.dto.SignInRequest;
 import com.finconnect.auth_service.dto.SignUpRequest;
+import com.finconnect.auth_service.dto.UserInfoFromJwtResponse;
 import com.finconnect.auth_service.entity.Role;
 import com.finconnect.auth_service.entity.Users;
 import com.finconnect.auth_service.exception.exceptions.DuplicateUserException;
@@ -54,6 +56,7 @@ public class AuthService {
         return jwtUtil.generateToken(userDetails.getUsername());
     }
     //-------------------------//----------------------------//-------------------------------//-----------------------
+    @Transactional
     public ResponseEntity<AccountResponse> registerUser(@RequestBody SignUpRequest request) {
         logger.info("Trying to register user");
         if(usersRepository.findByEmail(request.email()).isPresent()) throw new DuplicateUserException("User alredy exists for the email: " + request.email());
@@ -66,7 +69,7 @@ public class AuthService {
     //-------------------------//----------------------------//-------------------------------//-----------------------
     private Users createAdminUser(SignUpRequest request) {
         var roles = new HashSet<Role>();
-        roles.add(Role.ROLE_USER);
+        roles.add(Role.ROLE_ADMIN);
         Users newUser = new Users();
         newUser.setFullName(request.fullName());
         newUser.setCpf(request.cpf());
@@ -75,6 +78,16 @@ public class AuthService {
         newUser.setRoles(roles);
 
         return newUser;
+    }
+    //-------------------------//----------------------------//-------------------------------//-----------------------
+    public UserInfoFromJwtResponse me(String token) {
+        logger.info("Trying to extract information from token");
+
+        return new UserInfoFromJwtResponse(
+            jwtUtil.getUsernameFromToken(token),
+            jwtUtil.getExpirationDateFromToken(token),
+            jwtUtil.getIssueDateFromToken(token)
+        );
     }
     //-------------------------//----------------------------//-------------------------------//-----------------------
 }

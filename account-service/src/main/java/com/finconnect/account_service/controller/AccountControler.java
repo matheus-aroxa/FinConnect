@@ -2,7 +2,6 @@ package com.finconnect.account_service.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -35,11 +34,6 @@ public class AccountControler {
     @PostMapping("/credit")
     public ResponseEntity<Account> creditAccount(@RequestBody CreditAccountRequest request) {
         return ResponseEntity.ok(this.service.creditAccount(request));
-    }
-
-    @GetMapping("/me")
-    public void me() {
-
     }
 
     @PatchMapping("/balance/update")
