@@ -30,6 +30,22 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+  
+  transactions_db:
+    image: postgres:latest
+    ports:
+      - 5434:5432
+    volumes: 
+      - transactions_volume:/var/lib/postgresql
+    environment:
+      - POSTGRES_USER=${TRANSACTIONSDB_USERNAME}
+      - POSTGRES_PASSWORD=${TRANSACTIONSDB_PASSWORD}
+      - POSTGRES_DB=${TRANSACTIONSDB_DB}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${TRANSACTIONSDB_USERNAME} -d ${TRANSACTIONSDB_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   eureka-server:
     build: ./eureka
@@ -82,7 +98,23 @@ services:
         condition: service_healthy
       eureka-server:
         condition: service_healthy
+
+  transaction-service:
+    build: ./transaction-service
+    environment:
+      DB_URL: ${TRANSACTIONSDB_URL:-jdbc:postgresql://transactions_db:5432/transactions_db}
+      DB_USERNAME: ${TRANSACTIONSDB_USERNAME:-root}
+      DB_PASSWORD: ${TRANSACTIONSDB_PASSWORD:-root}
+      JWT_SECRET: ${JWT_SECRET:-f64fefbfe95bfad56f2e81c8218fee610a72906cc1cbe4abc14b6d9684318826}
+      JWT_EXPIRATION: ${JWT_EXPIRATION:-3600000}
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: ${EUREKA_CLIENT_SERVICEURL_DEFAULTZONE:-http://eureka-server:8761/eureka/}
+    depends_on: 
+      transactions_db:
+        condition: service_healthy
+      eureka-server:
+        condition: service_healthy
       
 volumes:
   users_volume:
   accounts_volume:
+  transactions_volume:
