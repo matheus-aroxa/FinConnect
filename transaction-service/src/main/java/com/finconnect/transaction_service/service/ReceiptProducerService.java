@@ -1,0 +1,17 @@
+package com.finconnect.transaction_service.service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.stereotype.Service;
+import com.finconnect.transaction_service.dto.ReceiptRequest;
+
+@Service
+public class ReceiptProducerService {
+
+    @Autowired
+    private KafkaTemplate<String, ReceiptRequest> kafkaTemplate;
+
+    public void sendMessage(ReceiptRequest message) {
+        kafkaTemplate.send("receipts", message);
+    }
+}

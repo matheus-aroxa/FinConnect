@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.finconnect.transaction_service.dto.CreditAccountRequest;
 import com.finconnect.transaction_service.dto.DebtFromAccountRequest;
+import com.finconnect.transaction_service.dto.ReceiptRequest;
 import com.finconnect.transaction_service.dto.TransferRequest;
 import com.finconnect.transaction_service.entity.Status;
 import com.finconnect.transaction_service.entity.Transaction;
@@ -25,6 +26,9 @@ public class TransactionService {
 
     @Autowired
     private AccountClient accountClient;
+
+    @Autowired
+    private ReceiptProducerService receiptProducerService;
 
     //---------------------------//-------------------------//--------------------------------//------------------
     @Transactional
@@ -44,7 +48,8 @@ public class TransactionService {
             accountClient.creditAccount(new CreditAccountRequest(request.destination(), request.amount()));
             transaction.setTransactionStatus(Status.COMPLETED);
 
-            this.transactionRepository.save(transaction);
+            var transactionResult = this.transactionRepository.save(transaction);
+            this.receiptProducerService.sendMessage(new ReceiptRequest("Transaction completed with id: " + transactionResult.getId()));
             return "Transaction completed";
         } catch (Exception e) {
             logger.error("Transaction failed");

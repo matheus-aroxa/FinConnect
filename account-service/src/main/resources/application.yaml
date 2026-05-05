@@ -20,7 +20,3 @@ eureka:
   
 server:
   port: 0
-
-logging:
-  level:
-    root: DEBUG
