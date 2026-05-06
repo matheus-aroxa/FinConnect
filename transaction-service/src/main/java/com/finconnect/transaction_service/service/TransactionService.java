@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.finconnect.transaction_service.dto.CreditAccountRequest;
 import com.finconnect.transaction_service.dto.DebtFromAccountRequest;
-import com.finconnect.transaction_service.dto.ReceiptRequest;
+import com.finconnect.transaction_service.dto.SendEmailResquest;
 import com.finconnect.transaction_service.dto.TransferRequest;
 import com.finconnect.transaction_service.entity.Status;
 import com.finconnect.transaction_service.entity.Transaction;
@@ -49,7 +49,7 @@ public class TransactionService {
             transaction.setTransactionStatus(Status.COMPLETED);
 
             var transactionResult = this.transactionRepository.save(transaction);
-            this.receiptProducerService.sendMessage(new ReceiptRequest("Transaction completed with id: " + transactionResult.getId()));
+            this.receiptProducerService.sendMessage(new SendEmailResquest("test@gmail.com", "test", "test"));
             return "Transaction completed";
         } catch (Exception e) {
             logger.error("Transaction failed");

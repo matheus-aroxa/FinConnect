@@ -2,7 +2,6 @@ package com.finconnect.notification_service.configuration;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,8 +11,7 @@ import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
-
-import com.finconnect.notification_service.dto.ReceiptRequest;
+import com.finconnect.notification_service.dto.SendEmailResquest;
 
 @Configuration
 public class KafkaConsumerConfig {
@@ -22,12 +20,12 @@ public class KafkaConsumerConfig {
     private String bootstrapServers;
 
     @Bean
-    public ConsumerFactory<String, ReceiptRequest> consumerFactory() {
+    public ConsumerFactory<String, SendEmailResquest> consumerFactory() {
         Map<String, Object> props = new HashMap<>();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         props.put(ConsumerConfig.GROUP_ID_CONFIG, "receipt-group");
         
-        JsonDeserializer<ReceiptRequest> deserializer = new JsonDeserializer<>(ReceiptRequest.class, false);
+        JsonDeserializer<SendEmailResquest> deserializer = new JsonDeserializer<>(SendEmailResquest.class, false);
         deserializer.addTrustedPackages("*");
 
         return new DefaultKafkaConsumerFactory<>(
@@ -38,8 +36,8 @@ public class KafkaConsumerConfig {
     }
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, ReceiptRequest> kafkaListenerContainerFactory() {
-        ConcurrentKafkaListenerContainerFactory<String, ReceiptRequest> factory = 
+    public ConcurrentKafkaListenerContainerFactory<String, SendEmailResquest> kafkaListenerContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, SendEmailResquest> factory = 
                 new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory());
         return factory;

@@ -6,6 +6,17 @@ spring:
       uri: ${NOTIFICATIONSDB_URL:mongodb://root:root@localhost:27017/notifications}
   kafka:
     bootstrap-servers: ${SPRING_KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${MAIL_ORIGIN:finconnect.contact@gmail.com}
+    password: ${MAIL_PASSWORD:ouga ldpa sydn jvuh}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 
 eureka:
   client:
