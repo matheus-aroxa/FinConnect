@@ -4,6 +4,8 @@ spring:
   data:
     mongodb:
       uri: ${NOTIFICATIONSDB_URL:mongodb://root:root@localhost:27017/notifications}
+  kafka:
+    bootstrap-servers: ${SPRING_KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
 
 eureka:
   client:
