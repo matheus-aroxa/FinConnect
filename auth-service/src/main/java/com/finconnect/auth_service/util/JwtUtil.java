@@ -21,7 +21,7 @@ import jakarta.annotation.PostConstruct;
 public class JwtUtil {
 
     private static final Logger logger = LoggerFactory.getLogger(JwtUtil.class);
-    
+
     @Value("${jwt.secret}")
     private String jwtSecret;
 
@@ -37,19 +37,19 @@ public class JwtUtil {
 
     public String generateToken(String username) {
         return Jwts.builder()
-                    .setSubject(username)
-                    .setIssuedAt(new Date())
-                    .setExpiration(new Date(new Date().getTime() + jwtExpirationMs))
-                    .signWith(key, SignatureAlgorithm.HS256)
-                    .compact();
+                .setSubject(username)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(new Date().getTime() + jwtExpirationMs))
+                .signWith(key, SignatureAlgorithm.HS256)
+                .compact();
     }
 
     public String getUsernameFromToken(String token) {
         return Jwts.parserBuilder()
-                    .setSigningKey(key).build()
-                    .parseClaimsJws(token)
-                    .getBody()
-                    .getSubject();
+                .setSigningKey(key).build()
+                .parseClaimsJws(token)
+                .getBody()
+                .getSubject();
     }
 
     public Date getExpirationDateFromToken(String token) {
