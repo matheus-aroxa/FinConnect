@@ -18,6 +18,7 @@ import com.finconnect.auth_service.dto.CreateAccount;
 import com.finconnect.auth_service.dto.SignInRequest;
 import com.finconnect.auth_service.dto.SignUpRequest;
 import com.finconnect.auth_service.dto.UserInfoFromJwtResponse;
+import com.finconnect.auth_service.dto.UserInfoRequest;
 import com.finconnect.auth_service.entity.Role;
 import com.finconnect.auth_service.entity.Users;
 import com.finconnect.auth_service.exception.exceptions.DuplicateUserException;
@@ -80,8 +81,9 @@ public class AuthService {
         return newUser;
     }
     //-------------------------//----------------------------//-------------------------------//-----------------------
-    public UserInfoFromJwtResponse me(String token) {
+    public UserInfoFromJwtResponse me(UserInfoRequest request) {
         logger.info("Trying to extract information from token");
+        String token = request.token();
 
         return new UserInfoFromJwtResponse(
             jwtUtil.getUsernameFromToken(token),

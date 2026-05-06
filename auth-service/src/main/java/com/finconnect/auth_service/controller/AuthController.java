@@ -3,7 +3,6 @@ package com.finconnect.auth_service.controller;
 import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,6 +11,7 @@ import com.finconnect.auth_service.dto.AccountResponse;
 import com.finconnect.auth_service.dto.SignInRequest;
 import com.finconnect.auth_service.dto.SignUpRequest;
 import com.finconnect.auth_service.dto.UserInfoFromJwtResponse;
+import com.finconnect.auth_service.dto.UserInfoRequest;
 import com.finconnect.auth_service.service.AuthService;
 import jakarta.validation.Valid;
 
@@ -32,8 +32,8 @@ public class AuthController {
         return this.authService.registerUser(request);
     }
 
-    @GetMapping("/me")
-    public ResponseEntity<UserInfoFromJwtResponse> me(String token) {
-        return ResponseEntity.ok(this.authService.me(token));
+    @PostMapping("/me")
+    public ResponseEntity<UserInfoFromJwtResponse> me(@RequestBody UserInfoRequest request) {
+        return ResponseEntity.ok(this.authService.me(request));
     }
 }
