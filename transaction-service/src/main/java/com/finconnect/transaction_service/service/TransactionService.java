@@ -8,12 +8,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.finconnect.transaction_service.dto.CreditAccountRequest;
 import com.finconnect.transaction_service.dto.DebtFromAccountRequest;
+import com.finconnect.transaction_service.dto.EmailFromCpfRequest;
 import com.finconnect.transaction_service.dto.SendEmailResquest;
 import com.finconnect.transaction_service.dto.TransferRequest;
 import com.finconnect.transaction_service.entity.Status;
 import com.finconnect.transaction_service.entity.Transaction;
 import com.finconnect.transaction_service.entity.Type;
 import com.finconnect.transaction_service.feign.AccountClient;
+import com.finconnect.transaction_service.feign.AuthClient;
 import com.finconnect.transaction_service.repository.TransactionRepository;
 
 @Service
@@ -26,6 +28,9 @@ public class TransactionService {
 
     @Autowired
     private AccountClient accountClient;
+
+    @Autowired
+    private AuthClient authClient;
 
     @Autowired
     private ReceiptProducerService receiptProducerService;
@@ -48,8 +53,14 @@ public class TransactionService {
             accountClient.creditAccount(new CreditAccountRequest(request.destination(), request.amount()));
             transaction.setTransactionStatus(Status.COMPLETED);
 
-            var transactionResult = this.transactionRepository.save(transaction);
-            this.receiptProducerService.sendMessage(new SendEmailResquest("test@gmail.com", "test", "test"));
+            this.transactionRepository.save(transaction);
+
+            this.receiptProducerService.sendMessage(
+                new SendEmailResquest(authClient.findEmailFromCpf(new EmailFromCpfRequest(request.origin())).getBody().email(), "Transaction completed", "The transaction completed successfully."));
+
+            this.receiptProducerService.sendMessage(
+                new SendEmailResquest(authClient.findEmailFromCpf(new EmailFromCpfRequest(request.destination())).getBody().email(), "Transaction completed", "The transaction completed successfully."));
+            
             return "Transaction completed";
         } catch (Exception e) {
             logger.error("Transaction failed");

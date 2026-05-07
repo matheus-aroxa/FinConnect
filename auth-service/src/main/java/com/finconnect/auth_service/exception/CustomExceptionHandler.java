@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import com.finconnect.auth_service.exception.exceptions.DuplicateUserException;
+import com.finconnect.auth_service.exception.exceptions.EmailNotFoundForCpfException;
 import com.finconnect.auth_service.exception.exceptions.ExpiredTokenException;
 import com.finconnect.auth_service.exception.exceptions.IntegrationException;
 import com.finconnect.auth_service.exception.exceptions.InvalidCredentialsException;
@@ -77,6 +78,18 @@ public class CustomExceptionHandler {
 
     @ExceptionHandler(InvalidDataException.class)
     public ResponseEntity<ExceptionResponse> handleInvalidDataException(InvalidDataException ex, WebRequest request) {
+        ExceptionResponse response = new ExceptionResponse(
+            new Date(),
+            ex.getMessage(),
+            request.getDescription(false)
+        );
+
+
+        return ResponseEntity.badRequest().body(response);
+    }
+
+    @ExceptionHandler(EmailNotFoundForCpfException.class)
+    public ResponseEntity<ExceptionResponse> handleEmailNotFoundForCpfException(EmailNotFoundForCpfException ex, WebRequest request) {
         ExceptionResponse response = new ExceptionResponse(
             new Date(),
             ex.getMessage(),

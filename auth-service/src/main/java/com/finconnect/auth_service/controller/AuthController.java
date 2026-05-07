@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.finconnect.auth_service.dto.AccountResponse;
+import com.finconnect.auth_service.dto.EmailFromCpfRequest;
+import com.finconnect.auth_service.dto.EmailFromCpfResponse;
 import com.finconnect.auth_service.dto.SignInRequest;
 import com.finconnect.auth_service.dto.SignUpRequest;
 import com.finconnect.auth_service.dto.UserInfoFromJwtResponse;
@@ -35,5 +37,10 @@ public class AuthController {
     @PostMapping("/me")
     public ResponseEntity<UserInfoFromJwtResponse> me(@RequestBody UserInfoRequest request) {
         return ResponseEntity.ok(this.authService.me(request));
+    }
+
+    @PostMapping("/email")
+    public ResponseEntity<EmailFromCpfResponse> findEmailFromCpf(@RequestBody EmailFromCpfRequest request) {
+        return ResponseEntity.ok(this.authService.findEmailFromCpf(request));
     }
 }

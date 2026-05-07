@@ -12,7 +12,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-
 import com.finconnect.auth_service.entity.Users;
 import com.finconnect.auth_service.repository.UsersRepository;
 import com.finconnect.auth_service.service.CustomUserDetailsService;

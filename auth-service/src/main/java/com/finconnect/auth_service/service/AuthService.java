@@ -15,6 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 import com.finconnect.auth_service.dto.AccountResponse;
 import com.finconnect.auth_service.dto.CreateAccount;
+import com.finconnect.auth_service.dto.EmailFromCpfRequest;
+import com.finconnect.auth_service.dto.EmailFromCpfResponse;
 import com.finconnect.auth_service.dto.SignInRequest;
 import com.finconnect.auth_service.dto.SignUpRequest;
 import com.finconnect.auth_service.dto.UserInfoFromJwtResponse;
@@ -22,6 +24,7 @@ import com.finconnect.auth_service.dto.UserInfoRequest;
 import com.finconnect.auth_service.entity.Role;
 import com.finconnect.auth_service.entity.Users;
 import com.finconnect.auth_service.exception.exceptions.DuplicateUserException;
+import com.finconnect.auth_service.exception.exceptions.EmailNotFoundForCpfException;
 import com.finconnect.auth_service.feign.AccountClient;
 import com.finconnect.auth_service.repository.UsersRepository;
 import com.finconnect.auth_service.util.JwtUtil;
@@ -90,6 +93,12 @@ public class AuthService {
             jwtUtil.getExpirationDateFromToken(token),
             jwtUtil.getIssueDateFromToken(token)
         );
+    }
+    //-------------------------//----------------------------//-------------------------------//-----------------------
+    public EmailFromCpfResponse findEmailFromCpf(EmailFromCpfRequest request) {
+        logger.info("Trying to find email by cpf");
+
+        return new EmailFromCpfResponse(this.usersRepository.findEmailByCpf(request.cpf()).orElseThrow(() -> new EmailNotFoundForCpfException()));
     }
     //-------------------------//----------------------------//-------------------------------//-----------------------
 }
