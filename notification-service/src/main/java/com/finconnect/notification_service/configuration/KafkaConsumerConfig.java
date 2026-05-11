@@ -11,7 +11,7 @@ import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
-import com.finconnect.notification_service.dto.SendEmailResquest;
+import com.finconnect.notification_service.dto.SendEmailRequest;
 
 @Configuration
 public class KafkaConsumerConfig {
@@ -20,12 +20,12 @@ public class KafkaConsumerConfig {
     private String bootstrapServers;
 
     @Bean
-    public ConsumerFactory<String, SendEmailResquest> consumerFactory() {
+    public ConsumerFactory<String, SendEmailRequest> consumerFactory() {
         Map<String, Object> props = new HashMap<>();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         props.put(ConsumerConfig.GROUP_ID_CONFIG, "receipt-group");
         
-        JsonDeserializer<SendEmailResquest> deserializer = new JsonDeserializer<>(SendEmailResquest.class, false);
+        JsonDeserializer<SendEmailRequest> deserializer = new JsonDeserializer<>(SendEmailRequest.class, false);
         deserializer.addTrustedPackages("*");
 
         return new DefaultKafkaConsumerFactory<>(
@@ -36,8 +36,8 @@ public class KafkaConsumerConfig {
     }
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, SendEmailResquest> kafkaListenerContainerFactory() {
-        ConcurrentKafkaListenerContainerFactory<String, SendEmailResquest> factory = 
+    public ConcurrentKafkaListenerContainerFactory<String, SendEmailRequest> kafkaListenerContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, SendEmailRequest> factory = 
                 new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory());
         return factory;

@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
-import com.finconnect.notification_service.dto.SendEmailResquest;
+import com.finconnect.notification_service.dto.SendEmailRequest;
 
 @Service
 public class ReceiptConsumerService {
@@ -16,9 +16,9 @@ public class ReceiptConsumerService {
     private EmailService emailService;
     
     @KafkaListener(topics = "receipts", groupId = "receipt-group")
-    public void consume(SendEmailResquest request) {
+    public void consume(SendEmailRequest request) {
         logger.info("Email request received");
 
-        emailService.enviarEmailTexto(request);
+        emailService.sendTextEmail(request);
     }
 }

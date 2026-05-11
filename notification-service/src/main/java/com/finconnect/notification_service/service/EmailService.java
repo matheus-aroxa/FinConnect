@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
-import com.finconnect.notification_service.dto.SendEmailResquest;
+import com.finconnect.notification_service.dto.SendEmailRequest;
 
 @Service
 public class EmailService {
@@ -20,7 +20,7 @@ public class EmailService {
     @Value("${spring.mail.username}")
     private String origin;
 
-    public String enviarEmailTexto(SendEmailResquest request){
+    public String sendTextEmail(SendEmailRequest request){
         logger.info("Trying to send email");
 
         try {
