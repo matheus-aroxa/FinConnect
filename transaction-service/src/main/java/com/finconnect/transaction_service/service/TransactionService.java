@@ -4,12 +4,15 @@ import java.util.Date;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.finconnect.transaction_service.dto.CreditAccountRequest;
 import com.finconnect.transaction_service.dto.DebtFromAccountRequest;
 import com.finconnect.transaction_service.dto.EmailFromCpfRequest;
 import com.finconnect.transaction_service.dto.SendEmailResquest;
+import com.finconnect.transaction_service.dto.StatementResponse;
 import com.finconnect.transaction_service.dto.TransferRequest;
 import com.finconnect.transaction_service.entity.Status;
 import com.finconnect.transaction_service.entity.Transaction;
@@ -17,6 +20,7 @@ import com.finconnect.transaction_service.entity.Type;
 import com.finconnect.transaction_service.feign.AccountClient;
 import com.finconnect.transaction_service.feign.AuthClient;
 import com.finconnect.transaction_service.repository.TransactionRepository;
+import org.springframework.data.domain.Pageable;
 
 @Service
 public class TransactionService {
@@ -72,4 +76,10 @@ public class TransactionService {
         }
     }
     //---------------------------//-------------------------//--------------------------------//------------------
+    public StatementResponse getStatement(String cpf) {
+        Pageable pageable = PageRequest.of(0, 20, Sort.by("createdAt").descending());
+        
+        var transactions = this.transactionRepository.findByOriginCpf(cpf, pageable);
+        return new StatementResponse(transactions);
+    }
 }

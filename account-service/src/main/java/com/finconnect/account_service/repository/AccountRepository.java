@@ -12,4 +12,7 @@ public interface AccountRepository extends JpaRepository<Account, String>{
     
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     Optional<Account> findAccountByCpf(String cpf);
+
+    // Use this for simple reads (getAccountInfo)
+    Optional<Account> findByCpf(String cpf); 
 }

@@ -45,7 +45,7 @@ services:
     volumes: 
       - users_volume:/var/lib/postgresql
     ports:
-      - 5432:5432
+      - 5435:5432
     environment:
       - POSTGRES_USER=${USERSDB_USERNAME}
       - POSTGRES_PASSWORD=${USERSDB_PASSWORD}

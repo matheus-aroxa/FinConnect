@@ -22,7 +22,6 @@ public class Account {
     @NotBlank
     private String agency;
 
-
     @NotNull
     private BigDecimal balance;
 

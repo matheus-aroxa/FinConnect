@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.finconnect.account_service.dto.AccountInfoResponse;
 import com.finconnect.account_service.dto.AccountResponse;
 import com.finconnect.account_service.dto.CreateAccount;
 import com.finconnect.account_service.dto.CreditAccountRequest;
@@ -99,5 +100,18 @@ public class AccountService {
     public Optional<Account> findAccountByCpf(String cpf) {
         logger.info("Searching for account based on cpf");
         return this.repository.findAccountByCpf(cpf);
+    }
+
+    @Transactional(readOnly = true)
+    public AccountInfoResponse getAccountInfo(String cpf) {
+        logger.info("Getting account info");
+
+        var account = this.repository.findByCpf(cpf).orElseThrow(() -> new AccountNotFoundException());
+
+        return new AccountInfoResponse(
+            account.getAccountNumber(),
+            account.getAgency(),
+            account.getBalance()
+        );
     }
 }
