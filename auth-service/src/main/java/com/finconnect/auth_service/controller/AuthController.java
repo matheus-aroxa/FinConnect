@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.finconnect.auth_service.dto.AccountResponse;
 import com.finconnect.auth_service.dto.EmailFromCpfRequest;
 import com.finconnect.auth_service.dto.EmailFromCpfResponse;
+import com.finconnect.auth_service.dto.RefreshRequest;
 import com.finconnect.auth_service.dto.SignInRequest;
+import com.finconnect.auth_service.dto.SignInResponse;
 import com.finconnect.auth_service.dto.SignUpRequest;
 import com.finconnect.auth_service.dto.UserInfoFromJwtResponse;
 import com.finconnect.auth_service.dto.UserInfoRequest;
@@ -25,7 +27,7 @@ public class AuthController {
     private AuthService authService;    
     
     @PostMapping("/signin")
-    public String authenticateUser(@Valid @RequestBody SignInRequest request) {
+    public SignInResponse authenticateUser(@Valid @RequestBody SignInRequest request) {
         return this.authService.authenticateUser(request);
     }
 
@@ -42,5 +44,10 @@ public class AuthController {
     @PostMapping("/email")
     public ResponseEntity<EmailFromCpfResponse> findEmailFromCpf(@RequestBody EmailFromCpfRequest request) {
         return ResponseEntity.ok(this.authService.findEmailFromCpf(request));
+    }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<String> refresh(@RequestBody RefreshRequest request) {
+        return ResponseEntity.ok(this.authService.refresh(request));
     }
 }

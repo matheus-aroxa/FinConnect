@@ -17,7 +17,9 @@ import com.finconnect.auth_service.dto.AccountResponse;
 import com.finconnect.auth_service.dto.CreateAccount;
 import com.finconnect.auth_service.dto.EmailFromCpfRequest;
 import com.finconnect.auth_service.dto.EmailFromCpfResponse;
+import com.finconnect.auth_service.dto.RefreshRequest;
 import com.finconnect.auth_service.dto.SignInRequest;
+import com.finconnect.auth_service.dto.SignInResponse;
 import com.finconnect.auth_service.dto.SignUpRequest;
 import com.finconnect.auth_service.dto.UserInfoFromJwtResponse;
 import com.finconnect.auth_service.dto.UserInfoRequest;
@@ -50,14 +52,16 @@ public class AuthService {
     private AccountClient accountClient;
 
     //-------------------------//----------------------------//-------------------------------//-----------------------
-    public String authenticateUser(SignInRequest request) {
+    public SignInResponse authenticateUser(SignInRequest request) {
         logger.info("Trying to authenticate user");
         Authentication authentication = authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(request.username(), request.password())
         );
 
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        return jwtUtil.generateToken(userDetails.getUsername());
+        String userName = userDetails.getUsername();
+
+        return new SignInResponse(jwtUtil.generateToken(userName), jwtUtil.generateRefreshToken(userName));
     }
     //-------------------------//----------------------------//-------------------------------//-----------------------
     @Transactional
@@ -101,4 +105,17 @@ public class AuthService {
         return new EmailFromCpfResponse(this.usersRepository.findEmailByCpf(request.cpf()).orElseThrow(() -> new EmailNotFoundForCpfException()));
     }
     //-------------------------//----------------------------//-------------------------------//-----------------------
+    public String refresh(RefreshRequest request) {
+        String token = request.refreshToken();
+
+        if(jwtUtil.validateRefreshToken(token)) {
+            String username = jwtUtil.getUsernameFromRefreshToken(token);
+
+            String newAccessToken = jwtUtil.generateToken(username);
+
+            return newAccessToken;
+        }
+
+        return "Invalid or expired refresh token";
+    }
 }

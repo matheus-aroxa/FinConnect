@@ -27,6 +27,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.finconnect.auth_service.dto.SignInRequest;
+import com.finconnect.auth_service.dto.SignInResponse;
 import com.finconnect.auth_service.dto.SignUpRequest;
 import com.finconnect.auth_service.dto.UserInfoRequest;
 import com.finconnect.auth_service.entity.Users;
@@ -58,7 +59,7 @@ public class AuthServiceTests {
     private AuthService authService;
 
     @Test
-    public void shouldReturnValidTokenWhenAuthenticatingValidUser() {
+    public void shouldReturnSignInResponseWhenAuthenticatingValidUser() {
         SignInRequest request = new SignInRequest("user@email.com", "password123");
         Authentication authentication = mock(Authentication.class);
         UserDetails userDetails = mock(UserDetails.class);
@@ -71,11 +72,11 @@ public class AuthServiceTests {
         when(jwtUtil.generateToken(request.username())).thenReturn(expectedToken);
 
         // Act
-        String token = authService.authenticateUser(request);
+        SignInResponse response = authService.authenticateUser(request);
 
         // Assert
-        assertNotNull(token);
-        assertEquals(expectedToken, token);
+        assertNotNull(response.jwt());
+        assertEquals(expectedToken, response.jwt());
         verify(authenticationManager).authenticate(any(UsernamePasswordAuthenticationToken.class));
         verify(jwtUtil).generateToken(request.username());
     }
