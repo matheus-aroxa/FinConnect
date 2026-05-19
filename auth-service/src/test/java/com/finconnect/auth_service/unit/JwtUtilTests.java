@@ -39,6 +39,16 @@ public class JwtUtilTests {
     }
 
     @Test
+    void shouldGenerateValidRefreshToken() {
+        String username = "test";
+        String token = jwtUtil.generateRefreshToken(username);
+
+        assertNotNull(token);
+        assertTrue(jwtUtil.validateRefreshToken(token));
+        assertEquals(username, jwtUtil.getUsernameFromRefreshToken(token));
+    }
+
+    @Test
     void shouldExtractCorrectDates() {
         String token = jwtUtil.generateToken("test");
         Date issuedAt = jwtUtil.getIssueDateFromToken(token);
@@ -52,6 +62,11 @@ public class JwtUtilTests {
     @Test
     void shouldReturnFalseForInvalidToken() {
         assertFalse(jwtUtil.validateJwtToken("not a valid token"));
+    }
+
+    @Test
+    void shouldReturnFalseForInvalidRefreshToken() {
+        assertFalse(jwtUtil.validateRefreshToken("not a valid token"));
     }
 
     @Test
