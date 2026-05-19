@@ -9,6 +9,12 @@ spring:
     enabled: true
     baseline-on-migrate: true
 
+springdoc:
+  api-docs:
+    path: /api/accounts/v3/api-docs
+  swagger-ui:
+    path: /api/accounts/swagger-ui.html
+
 eureka:
   client:
     register-with-eureka: true
