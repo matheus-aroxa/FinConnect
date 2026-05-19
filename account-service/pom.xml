@@ -32,6 +32,13 @@
 	</properties>
 	<dependencies>
 
+		<!--Swagger-->
+		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+			<version>3.0.2</version>
+		</dependency>
+
 		<!--Eureka-->
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>

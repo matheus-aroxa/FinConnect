@@ -21,6 +21,18 @@ spring:
           predicates:
             - Path=/api/transactions/**
 
+springdoc:
+  swagger-ui:
+    urls:
+      - name: auth-service
+        url: api/auth/v3/api-docs
+      - name: account-service
+        url: api/accounts/v3/api-docs
+      - name: notification-service
+        url: v3/api-docs
+      - name: transaction-service
+        url: api/transactions/v3/api-docs
+
 eureka:
   client:
     serviceUrl:

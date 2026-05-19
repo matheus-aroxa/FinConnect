@@ -3,13 +3,12 @@ package com.finconnect.account_service.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
+import com.finconnect.account_service.controller.docs.AccountControllerDoc;
 import com.finconnect.account_service.dto.AccountInfoResponse;
 import com.finconnect.account_service.dto.AccountResponse;
 import com.finconnect.account_service.dto.CreateAccount;
@@ -17,9 +16,12 @@ import com.finconnect.account_service.dto.CreditAccountRequest;
 import com.finconnect.account_service.dto.DebtFromAccountRequest;
 import com.finconnect.account_service.service.AccountService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+
+@Tag(name = "Accounts", description = "Accounts API")
 @RestController
 @RequestMapping("/api/accounts")
-public class AccountControler {
+public class AccountControler implements AccountControllerDoc {
 
     @Autowired
     private AccountService service;

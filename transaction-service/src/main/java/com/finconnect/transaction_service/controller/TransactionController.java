@@ -9,12 +9,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.finconnect.transaction_service.service.TransactionService;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import com.finconnect.transaction_service.controller.docs.TransactionControllerDoc;
 import com.finconnect.transaction_service.dto.StatementResponse;
 import com.finconnect.transaction_service.dto.TransferRequest;
 
+@Tag(name = "Transactions", description = "Transactions API")
 @RestController
 @RequestMapping("/api/transactions")
-public class TransactionController {
+public class TransactionController implements TransactionControllerDoc {
 
     @Autowired
     private TransactionService transactionService;
