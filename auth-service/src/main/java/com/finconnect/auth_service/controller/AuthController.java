@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import com.finconnect.auth_service.controller.docs.AuthControllerDocs;
 import com.finconnect.auth_service.dto.AccountResponse;
 import com.finconnect.auth_service.dto.EmailFromCpfRequest;
 import com.finconnect.auth_service.dto.EmailFromCpfResponse;
@@ -17,11 +18,13 @@ import com.finconnect.auth_service.dto.SignUpRequest;
 import com.finconnect.auth_service.dto.UserInfoFromJwtResponse;
 import com.finconnect.auth_service.dto.UserInfoRequest;
 import com.finconnect.auth_service.service.AuthService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
+@Tag(name = "Auth", description = "Auth API")
 @RestController
 @RequestMapping("/api/auth")
-public class AuthController {
+public class AuthController implements AuthControllerDocs {
 
     @Autowired
     private AuthService authService;    

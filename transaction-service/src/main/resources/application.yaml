@@ -11,6 +11,12 @@ spring:
   kafka:
     bootstrap-servers: ${SPRING_KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
   
+springdoc:
+  api-docs:
+    path: /api/transactions/v3/api-docs
+  swagger-ui:
+    path: /api/transactions/swagger-ui.html
+
 eureka:
   client:
     register-with-eureka: true
