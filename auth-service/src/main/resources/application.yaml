@@ -16,6 +16,9 @@ springdoc:
     path: /api/auth/swagger-ui.html
 
 jwt:
+  refresh:
+    secret: ${JWT_SECRET:f64fefbfe95bfad56f2e81c8218fee610a72906cc1cbe4abc14b6d9684318826}
+    expiration: ${JWT_EXPIRATION:360000000}
   secret: ${JWT_SECRET:f64fefbfe95bfad56f2e81c8218fee610a72906cc1cbe4abc14b6d9684318826}
   expiration: ${JWT_EXPIRATION:3600000}
 
