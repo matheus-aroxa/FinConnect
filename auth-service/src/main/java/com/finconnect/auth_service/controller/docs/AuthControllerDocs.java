@@ -6,6 +6,7 @@ import com.finconnect.auth_service.dto.AccountResponse;
 import com.finconnect.auth_service.dto.EmailFromCpfRequest;
 import com.finconnect.auth_service.dto.EmailFromCpfResponse;
 import com.finconnect.auth_service.dto.SignInRequest;
+import com.finconnect.auth_service.dto.SignInResponse;
 import com.finconnect.auth_service.dto.SignUpRequest;
 import com.finconnect.auth_service.dto.UserInfoFromJwtResponse;
 import com.finconnect.auth_service.dto.UserInfoRequest;
@@ -22,7 +23,7 @@ public interface AuthControllerDocs {
         @ApiResponse(responseCode = "200", description = "User authenticated successfully"),
         @ApiResponse(responseCode = "400", description = "Bad request")
     })
-    public String authenticateUser(@Valid @RequestBody SignInRequest request);
+    public SignInResponse authenticateUser(@Valid @RequestBody SignInRequest request);
     //---------------------------//----------------------------//-----------------------------//----------------//
     @Operation(summary = "Registers an user", description = "Registers an user")
     @ApiResponses(value = {
