@@ -1,0 +1,98 @@
+<section class="auth-shell">
+  <div class="auth-hero surface reveal">
+    <div class="brand">Nova conta</div>
+    <h1>Abra sua conta com controle total.</h1>
+    <p>
+      Cadastro rapido e seguro. Crie sua conta e comece a movimentar agora
+      mesmo.
+    </p>
+    <div class="hero-note">
+      Voce recebe agencia e numero de conta ao finalizar o cadastro.
+    </div>
+  </div>
+
+  <div class="auth-card surface reveal">
+    <h2>Crie sua conta</h2>
+    <p class="muted small">Preencha os dados para criar sua conta.</p>
+
+    <form class="form" [formGroup]="form" (ngSubmit)="submit()">
+      <label class="label">
+        Nome completo
+        <input class="input" type="text" formControlName="fullName" placeholder="Seu nome" />
+      </label>
+      <div
+        class="field-error"
+        *ngIf="form.controls.fullName.touched && form.controls.fullName.invalid"
+      >
+        Informe seu nome completo.
+      </div>
+
+      <label class="label">
+        CPF
+        <input
+          class="input"
+          type="text"
+          formControlName="cpf"
+          inputmode="numeric"
+          placeholder="Somente numeros"
+        />
+      </label>
+      <div class="field-error" *ngIf="form.controls.cpf.touched && form.controls.cpf.invalid">
+        Informe 11 digitos.
+      </div>
+
+      <label class="label">
+        Email
+        <input class="input" type="email" formControlName="email" placeholder="voce@email.com" />
+      </label>
+      <div
+        class="field-error"
+        *ngIf="form.controls.email.touched && form.controls.email.invalid"
+      >
+        Informe um email valido.
+      </div>
+
+      <label class="label">
+        Senha
+        <input class="input" type="password" formControlName="password" placeholder="Minimo 6 caracteres" />
+      </label>
+      <div
+        class="field-error"
+        *ngIf="form.controls.password.touched && form.controls.password.invalid"
+      >
+        Use pelo menos 6 caracteres.
+      </div>
+
+      <button class="btn btn-primary" type="submit" [disabled]="isLoading">
+        {{ isLoading ? 'Criando...' : 'Criar conta' }}
+      </button>
+    </form>
+
+    <div class="auth-footer">
+      Ja tem conta?
+      <a class="link" routerLink="/auth/login">Entrar</a>
+    </div>
+
+    <div class="success-panel" *ngIf="accountCreated">
+      <h3>Conta criada</h3>
+      <div class="success-grid">
+        <div>
+          <div class="muted small">Agencia</div>
+          <div class="strong">{{ accountCreated.agency }}</div>
+        </div>
+        <div>
+          <div class="muted small">Conta</div>
+          <div class="strong">{{ accountCreated.accountNumber }}</div>
+        </div>
+        <div>
+          <div class="muted small">Saldo inicial</div>
+          <div class="strong">{{ formatCurrency(accountCreated.balance) }}</div>
+        </div>
+        <div>
+          <div class="muted small">Status</div>
+          <div class="strong">{{ accountCreated.status }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,72 @@
+<section class="auth-shell">
+  <div class="auth-hero surface reveal">
+    <div class="brand">FinConnect</div>
+    <h1>Internet banking sem ruido.</h1>
+    <p>
+      Controle saldo, transferencias e movimentacoes com uma experiencia clara,
+      direta e responsiva.
+    </p>
+    <ul class="feature-list">
+      <li>Transferencias e extrato em tempo real</li>
+      <li>Cartoes digitais e movimentos auditaveis</li>
+      <li>Notificacoes de email para cada transacao</li>
+    </ul>
+    <div class="hero-note">
+      Seguranca com JWT e camadas de validacao em cada operacao.
+    </div>
+  </div>
+
+  <div class="auth-card surface reveal">
+    <h2>Acesse sua conta</h2>
+    <p class="muted small">
+      Use seu email e senha. Informe o CPF para liberar operacoes.
+    </p>
+
+    <form class="form" [formGroup]="form" (ngSubmit)="submit()">
+      <label class="label">
+        Email
+        <input class="input" type="email" formControlName="email" placeholder="voce@email.com" />
+      </label>
+      <div
+        class="field-error"
+        *ngIf="form.controls.email.touched && form.controls.email.invalid"
+      >
+        Informe um email valido.
+      </div>
+
+      <label class="label">
+        Senha
+        <input class="input" type="password" formControlName="password" placeholder="Sua senha" />
+      </label>
+      <div
+        class="field-error"
+        *ngIf="form.controls.password.touched && form.controls.password.invalid"
+      >
+        Informe sua senha.
+      </div>
+
+      <label class="label">
+        CPF
+        <input
+          class="input"
+          type="text"
+          formControlName="cpf"
+          inputmode="numeric"
+          placeholder="Somente numeros"
+        />
+      </label>
+      <div class="field-error" *ngIf="form.controls.cpf.touched && form.controls.cpf.invalid">
+        Informe 11 digitos.
+      </div>
+
+      <button class="btn btn-primary" type="submit" [disabled]="isLoading">
+        {{ isLoading ? 'Entrando...' : 'Entrar' }}
+      </button>
+    </form>
+
+    <div class="auth-footer">
+      Nao tem conta?
+      <a class="link" routerLink="/auth/register">Criar conta</a>
+    </div>
+  </div>
+</section>

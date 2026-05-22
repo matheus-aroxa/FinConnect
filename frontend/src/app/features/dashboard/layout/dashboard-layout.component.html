@@ -1,0 +1,39 @@
+<div class="dashboard-shell">
+  <aside class="sidebar surface">
+    <div class="sidebar-header">
+      <div class="brand">FinConnect</div>
+      <div class="tagline muted">Controle total da sua conta</div>
+    </div>
+
+    <nav class="nav">
+      <a routerLink="/app/overview" routerLinkActive="active">Visao geral</a>
+      <a routerLink="/app/transfer" routerLinkActive="active">Transferencia</a>
+      <a routerLink="/app/deposit" routerLinkActive="active">Deposito</a>
+      <a routerLink="/app/withdraw" routerLinkActive="active">Saque</a>
+      <a routerLink="/app/statement" routerLinkActive="active">Extrato</a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="small muted">Sessao ativa</div>
+      <div class="session-line">{{ session()?.email || 'email@exemplo.com' }}</div>
+      <div class="session-line">CPF {{ session()?.cpf || '00000000000' }}</div>
+      <button class="btn btn-outline" type="button" (click)="logout()">Sair</button>
+    </div>
+  </aside>
+
+  <main class="dashboard-main">
+    <header class="dash-header surface">
+      <div>
+        <div class="small muted">Conta ativa</div>
+        <div class="header-title">{{ session()?.email || 'FinConnect' }}</div>
+      </div>
+      <div class="header-actions">
+        <a class="btn btn-ghost" routerLink="/app/transfer">Nova transferencia</a>
+      </div>
+    </header>
+
+    <section class="dash-content">
+      <router-outlet></router-outlet>
+    </section>
+  </main>
+</div>

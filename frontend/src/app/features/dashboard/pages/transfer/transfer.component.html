@@ -1,0 +1,46 @@
+<div class="page">
+  <div class="page-head">
+    <div>
+      <h1>Transferencia</h1>
+      <p class="muted">Envie valores para outra conta.</p>
+    </div>
+  </div>
+
+  <div class="surface card form-card">
+    <form class="form" [formGroup]="form" (ngSubmit)="submit()">
+      <label class="label">
+        CPF origem
+        <input class="input" type="text" [value]="originCpf || ''" disabled />
+      </label>
+
+      <label class="label">
+        CPF destino
+        <input
+          class="input"
+          type="text"
+          formControlName="destinationCpf"
+          inputmode="numeric"
+          placeholder="Somente numeros"
+        />
+      </label>
+      <div
+        class="field-error"
+        *ngIf="form.controls.destinationCpf.touched && form.controls.destinationCpf.invalid"
+      >
+        Informe 11 digitos.
+      </div>
+
+      <label class="label">
+        Valor
+        <input class="input" type="number" min="0.01" step="0.01" formControlName="amount" />
+      </label>
+      <div class="field-error" *ngIf="form.controls.amount.touched && form.controls.amount.invalid">
+        Informe um valor valido.
+      </div>
+
+      <button class="btn btn-primary" type="submit" [disabled]="isLoading">
+        {{ isLoading ? 'Enviando...' : 'Confirmar transferencia' }}
+      </button>
+    </form>
+  </div>
+</div>

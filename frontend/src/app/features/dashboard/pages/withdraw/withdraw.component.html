@@ -1,0 +1,46 @@
+<div class="page">
+  <div class="page-head">
+    <div>
+      <h1>Saque</h1>
+      <p class="muted">Debite dinheiro da sua conta.</p>
+    </div>
+  </div>
+
+  <div class="surface card form-card">
+    <form class="form" [formGroup]="form" (ngSubmit)="submit()">
+      <label class="label">
+        Valor
+        <input class="input" type="number" min="0.01" step="0.01" formControlName="amount" />
+      </label>
+      <div class="field-error" *ngIf="form.controls.amount.touched && form.controls.amount.invalid">
+        Informe um valor valido.
+      </div>
+
+      <button class="btn btn-primary" type="submit" [disabled]="isLoading">
+        {{ isLoading ? 'Processando...' : 'Debitar saldo' }}
+      </button>
+    </form>
+  </div>
+
+  <div class="surface card result-card" *ngIf="result">
+    <h3>Saldo atualizado</h3>
+    <div class="result-grid">
+      <div>
+        <div class="muted small">Agencia</div>
+        <div class="strong">{{ result.agency }}</div>
+      </div>
+      <div>
+        <div class="muted small">Conta</div>
+        <div class="strong">{{ result.accountNumber }}</div>
+      </div>
+      <div>
+        <div class="muted small">Saldo</div>
+        <div class="strong">{{ formatCurrency(result.balance) }}</div>
+      </div>
+      <div>
+        <div class="muted small">Status</div>
+        <div class="strong">{{ result.status }}</div>
+      </div>
+    </div>
+  </div>
+</div>
