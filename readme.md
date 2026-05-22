@@ -2,15 +2,13 @@
 
 FinConnect is a simplified Internet Banking platform built with a high-performance microservices architecture.
 
-The project was designed to simulate the ecosystem used by large financial institutions such as Itaú, Bradesco, Santander, and global consulting companies like Accenture.
+The project was designed to simulate the ecosystem used by large financial institutions.
 
 The primary goal of this repository is not only functionality, but also the demonstration of concepts such as resilience, scalability, security, and ACID data integrity.
 
 ---
 
 # 🏗️ System Architecture
-
-The solution adopts the **Hexagonal Architecture (Ports and Adapters)** pattern inside each microservice, ensuring that business rules remain independent from external technologies such as databases or message brokers.
 
 ## Technical Decisions & Enterprise Justifications
 
@@ -20,7 +18,7 @@ The solution adopts the **Hexagonal Architecture (Ports and Adapters)** pattern 
 | **Angular 17+** | Frontend SPA | Opinionated and modular structure preferred by large enterprises for complex systems. |
 | **PostgreSQL** | Relational Database | Guarantees ACID properties, essential for balance and transaction consistency. |
 | **MongoDB** | NoSQL Database | Flexible and fast storage for notification logs and audit trails. |
-| **RabbitMQ** | Messaging Broker | Asynchronous communication ensures external failures (e.g., email delivery) do not affect banking transactions. |
+| **Kafka** | Messaging Broker | Asynchronous communication ensures external failures (e.g., email delivery) do not affect banking transactions. |
 | **Docker Compose** | Infrastructure | Standardized environment setup and simplified CI/CD deployment pipelines. |
 
 ---
@@ -31,15 +29,15 @@ The platform is composed of the following services, communicating through REST (
 
 - **API Gateway (Spring Cloud Gateway):** Single entry point responsible for centralized authentication and request routing.
 
-- **Discovery Service (Netflix Eureka):** Enables dynamic service discovery through service IDs.
+- **Discovery Service (Netflix Eureka):** Enables dynamic service discovery.
 
 - **Auth Service:** Handles identity and authentication using Spring Security, JWT, and BCrypt password encryption.
 
 - **Account Service:** Manages customer profiles and account balances using **Pessimistic Locking** to avoid race conditions during concurrent transactions.
 
-- **Transaction Service:** The financial core responsible for orchestrating transfers (PIX/TED). Uses the **Saga Pattern** or manual rollback strategies to ensure consistency between related operations.
+- **Transaction Service:** The financial core responsible for orchestrating transfers (PIX/TED).
 
-- **Notification Service:** Asynchronous worker that consumes RabbitMQ events and persists notification history in MongoDB.
+- **Notification Service:** Asynchronous worker that consumes Kafka topics and persists notification history in MongoDB.
 
 ---
 
@@ -67,8 +65,6 @@ If any step fails, the system automatically performs a **rollback**.
 
 ## 3. Resilience & Observability
 
-- **Circuit Breaker (Resilience4j):** Prevents cascading failures. If the notification service becomes unavailable, transfers continue to operate normally.
-
 - **Correlation ID:** Every request receives a unique identifier at the Gateway level, enabling end-to-end tracing across all microservices.
 
 ---
@@ -79,7 +75,7 @@ The entire ecosystem can be started with a single command, simplifying technical
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/finconnect.git
+git clone https://github.com/matheus-aroxa/finconnect.git
 
 # Start infrastructure and services
 docker-compose up -d
@@ -124,8 +120,6 @@ The project implements a testing pyramid focused on ensuring that business logic
 
 - **Bean Validation:** Annotations such as `@CPF` and `@Email` validate data before it reaches the business layer.
 
-- **Style Guide:** Follows the Google Java Style Guide to maintain consistency across all microservices.
-
 ---
 
 ## 3. Project Structure (Maven/Gradle Layout)
@@ -146,12 +140,9 @@ src/
 # 📌 Key Engineering Highlights
 
 - Microservices Architecture
-- Hexagonal Architecture (Ports & Adapters)
 - ACID Transactions
-- Saga Pattern
 - JWT Authentication
-- Circuit Breaker with Resilience4j
-- RabbitMQ Event-Driven Communication
+- Kafka Event-Driven Communication
 - PostgreSQL + MongoDB Polyglot Persistence
 - Dockerized Infrastructure
 - Correlation ID Distributed Tracing
