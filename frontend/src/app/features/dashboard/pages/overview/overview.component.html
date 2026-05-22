@@ -1,0 +1,70 @@
+<div class="page">
+  <div class="page-head">
+    <div>
+      <h1>Visao geral</h1>
+      <p class="muted">Resumo da conta e atalhos rapidos.</p>
+    </div>
+    <div class="page-actions">
+      <a class="btn btn-outline" routerLink="/app/statement">Ver extrato</a>
+    </div>
+  </div>
+
+  <div class="overview-grid">
+    <div class="surface card">
+      <div class="balance-label">Saldo atual</div>
+      <div class="balance-value">{{ formatCurrency(accountInfo?.balance) }}</div>
+      <div class="meta-grid">
+        <div>
+          <div class="muted small">Agencia</div>
+          <div class="strong">{{ accountInfo?.agency || '-' }}</div>
+        </div>
+        <div>
+          <div class="muted small">Conta</div>
+          <div class="strong">{{ accountInfo?.accountNumber || '-' }}</div>
+        </div>
+      </div>
+      <div class="helper" *ngIf="isLoading">Atualizando dados...</div>
+    </div>
+
+    <div class="surface card">
+      <h3>Operacoes rapidas</h3>
+      <div class="quick-actions">
+        <a class="action-tile" routerLink="/app/transfer">
+          <div class="action-title">Transferir</div>
+          <div class="muted small">Enviar valores para outra conta</div>
+        </a>
+        <a class="action-tile" routerLink="/app/deposit">
+          <div class="action-title">Depositar</div>
+          <div class="muted small">Adicionar saldo para testes</div>
+        </a>
+        <a class="action-tile" routerLink="/app/withdraw">
+          <div class="action-title">Sacar</div>
+          <div class="muted small">Debitar valor da conta</div>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="surface card">
+    <div class="section-head">
+      <h3>Ultimas transacoes</h3>
+      <a class="link" routerLink="/app/statement">Detalhar extrato</a>
+    </div>
+
+    <div *ngIf="isStatementLoading" class="helper">Carregando extrato...</div>
+
+    <div *ngIf="!isStatementLoading && transactions.length === 0" class="helper">
+      Nenhuma transacao encontrada.
+    </div>
+
+    <div class="tx-list" *ngIf="transactions.length > 0">
+      <div class="tx-row" *ngFor="let tx of transactions">
+        <div>
+          <div class="badge">{{ typeLabel(tx.transactionType) }}</div>
+          <div class="muted small">{{ formatDateTime(tx.createdAt) }}</div>
+        </div>
+        <div class="tx-amount">{{ formatCurrency(tx.amount) }}</div>
+      </div>
+    </div>
+  </div>
+</div>

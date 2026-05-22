@@ -1,0 +1,8 @@
+.form-card {
+  max-width: 520px;
+}
+
+.form {
+  display: grid;
+  gap: 1rem;
+}

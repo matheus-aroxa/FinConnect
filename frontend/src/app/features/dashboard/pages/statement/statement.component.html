@@ -1,0 +1,75 @@
+<div class="page">
+  <div class="page-head">
+    <div>
+      <h1>Extrato</h1>
+      <p class="muted">Historico das ultimas movimentacoes.</p>
+    </div>
+  </div>
+
+  <div class="statement-grid">
+    <div class="surface card master">
+      <div class="section-head">
+        <h3>Movimentacoes</h3>
+      </div>
+
+      <div class="helper" *ngIf="isLoading">Carregando movimentacoes...</div>
+
+      <div class="helper" *ngIf="!isLoading && transactions.length === 0">
+        Nenhuma transacao encontrada.
+      </div>
+
+      <button
+        class="tx-item"
+        type="button"
+        *ngFor="let tx of transactions; trackBy: trackById"
+        [class.selected]="tx.id === selected?.id"
+        (click)="select(tx)"
+      >
+        <div class="tx-line">
+          <span class="badge">{{ typeLabel(tx.transactionType) }}</span>
+          <span class="amount">{{ formatCurrency(tx.amount) }}</span>
+        </div>
+        <div class="muted small">
+          {{ formatDateTime(tx.createdAt) }} - Destino {{ tx.destinationCpf }}
+        </div>
+      </button>
+    </div>
+
+    <div class="surface card detail" *ngIf="selected; else emptyDetail">
+      <h3>Detalhes</h3>
+      <div class="detail-grid">
+        <div>
+          <div class="muted small">Tipo</div>
+          <div class="strong">{{ typeLabel(selected.transactionType) }}</div>
+        </div>
+        <div>
+          <div class="muted small">Status</div>
+          <div class="strong">{{ statusLabel(selected.transactionStatus) }}</div>
+        </div>
+        <div>
+          <div class="muted small">Origem</div>
+          <div class="strong">{{ selected.originCpf }}</div>
+        </div>
+        <div>
+          <div class="muted small">Destino</div>
+          <div class="strong">{{ selected.destinationCpf }}</div>
+        </div>
+        <div>
+          <div class="muted small">Valor</div>
+          <div class="strong">{{ formatCurrency(selected.amount) }}</div>
+        </div>
+        <div>
+          <div class="muted small">Data</div>
+          <div class="strong">{{ formatDateTime(selected.createdAt) }}</div>
+        </div>
+      </div>
+    </div>
+
+    <ng-template #emptyDetail>
+      <div class="surface card detail empty">
+        <h3>Selecione uma transacao</h3>
+        <p class="muted">Clique em uma movimentacao para ver detalhes.</p>
+      </div>
+    </ng-template>
+  </div>
+</div>
