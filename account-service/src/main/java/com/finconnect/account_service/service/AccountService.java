@@ -50,7 +50,10 @@ public class AccountService {
     private String generateRandomAgencyNumber() {
         Random rand = new Random();
         int number = rand.nextInt(10000);
-        return String.format("%04d", number);
+        number = Integer.valueOf(String.format("%04d", number));
+
+        int verificationDigit = number % 10;
+        return String.format("%d-%d", number, verificationDigit);
     }
 
     @Transactional
