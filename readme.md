@@ -147,6 +147,7 @@ Para facilitar o desenvolvimento e a integração, a infraestrutura e os micross
 | **Netflix Eureka** | `8761` | Painel de controle para visualização dos serviços registrados. |
 | **Kafka UI** | `8000` | Interface web para monitoramento de tópicos, partições e mensagens. |
 | **Swagger UI** | `8080/swagger-ui.html` | Documentação centralizada e interativa das APIs do sistema. |
+| **Frontend** | `4200` | Aplicação frontend |
 
 > 💡 **Nota de Arquitetura:** Graças à centralização do **Spring Cloud Gateway**, você não precisa acessar as portas individuais de cada microsserviço (como Auth, Account ou Transaction) para testar os endpoints ou ver a documentação. Tudo é roteado de forma transparente através da porta `8080`.
 
