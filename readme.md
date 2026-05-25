@@ -137,6 +137,19 @@ src/
 
 ---
 
+# 🔌 Portas dos Serviços & Redirecionamento
+
+Para facilitar o desenvolvimento e a integração, a infraestrutura e os microsserviços expõem as seguintes portas no ambiente local:
+
+| Serviço / Interface | Porta Local | Descrição |
+| :--- | :--- | :--- |
+| **API Gateway** | `8080` | Ponto de entrada único para a API pública do ecossistema. |
+| **Netflix Eureka** | `8761` | Painel de controle para visualização dos serviços registrados. |
+| **Kafka UI** | `8000` | Interface web para monitoramento de tópicos, partições e mensagens. |
+| **Swagger UI** | `8080/swagger-ui.html` | Documentação centralizada e interativa das APIs do sistema. |
+
+> 💡 **Nota de Arquitetura:** Graças à centralização do **Spring Cloud Gateway**, você não precisa acessar as portas individuais de cada microsserviço (como Auth, Account ou Transaction) para testar os endpoints ou ver a documentação. Tudo é roteado de forma transparente através da porta `8080`.
+
 # 📌 Key Engineering Highlights
 
 - Microservices Architecture

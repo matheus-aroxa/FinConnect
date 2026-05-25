@@ -33,6 +33,10 @@ services:
       - 27017:27017
     volumes:
       - notifications_volume:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=root
+      - MONGO_INITDB_DATABASE=notifications
     healthcheck:
       test: ["CMD-SHELL", "mongosh --quiet --eval 'db.adminCommand(\"ping\")' || exit 1"]
       interval: 10s
