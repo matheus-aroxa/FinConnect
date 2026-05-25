@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 import com.finconnect.auth_service.dto.AccountResponse;
-import com.finconnect.auth_service.dto.CreateAccount;
 import com.finconnect.auth_service.dto.EmailFromCpfRequest;
 import com.finconnect.auth_service.dto.EmailFromCpfResponse;
 import com.finconnect.auth_service.dto.RefreshRequest;
@@ -28,6 +27,7 @@ import com.finconnect.auth_service.entity.Users;
 import com.finconnect.auth_service.exception.exceptions.DuplicateUserException;
 import com.finconnect.auth_service.exception.exceptions.EmailNotFoundForCpfException;
 import com.finconnect.auth_service.feign.AccountClient;
+import com.finconnect.auth_service.mapper.UserMapper;
 import com.finconnect.auth_service.repository.UsersRepository;
 import com.finconnect.auth_service.util.JwtUtil;
 
@@ -51,6 +51,9 @@ public class AuthService {
     @Autowired
     private AccountClient accountClient;
 
+    @Autowired
+    private UserMapper userMapper;
+
     //-------------------------//----------------------------//-------------------------------//-----------------------
     public SignInResponse authenticateUser(SignInRequest request) {
         logger.info("Trying to authenticate user");
@@ -72,16 +75,13 @@ public class AuthService {
 
         var user = usersRepository.save(createAdminUser(request));
 
-        return accountClient.createAccountOnSignUp(new CreateAccount(user.getCpf()));
+        return accountClient.createAccountOnSignUp(userMapper.toCreateAccount(user));
     }
     //-------------------------//----------------------------//-------------------------------//-----------------------
     private Users createAdminUser(SignUpRequest request) {
         var roles = new HashSet<Role>();
         roles.add(Role.ROLE_ADMIN);
-        Users newUser = new Users();
-        newUser.setFullName(request.fullName());
-        newUser.setCpf(request.cpf());
-        newUser.setEmail(request.email());
+        Users newUser = userMapper.toEntity(request);
         newUser.setPassword(encoder.encode(request.password()));
         newUser.setRoles(roles);
 

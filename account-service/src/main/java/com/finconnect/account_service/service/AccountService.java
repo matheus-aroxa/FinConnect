@@ -18,6 +18,7 @@ import com.finconnect.account_service.entity.Account;
 import com.finconnect.account_service.entity.Status;
 import com.finconnect.account_service.exception.exceptions.AccountNotFoundException;
 import com.finconnect.account_service.exception.exceptions.InsufficientBalanceException;
+import com.finconnect.account_service.mapper.AccountMapper;
 import com.finconnect.account_service.repository.AccountRepository;
 
 @Service
@@ -27,6 +28,9 @@ public class AccountService {
     
     @Autowired
     private AccountRepository repository;
+
+    @Autowired
+    private AccountMapper accountMapper;
 
     public AccountResponse createAccountOnSignUp(CreateAccount request) {
         Account account = new Account();
@@ -38,13 +42,7 @@ public class AccountService {
 
         var acc = this.repository.save(account);
 
-        return new AccountResponse(
-            acc.getCpf(),
-            acc.getAgency(),
-            acc.getAccountNumber(),
-            acc.getBalance(),
-            acc.getStatus()
-        );
+        return accountMapper.toResponse(acc);
     }
 
     private String generateRandomAgencyNumber() {
@@ -71,13 +69,7 @@ public class AccountService {
 
         var result = this.repository.save(account);
 
-        return new AccountResponse(
-            result.getCpf(),
-            result.getAgency(),
-            result.getAccountNumber(),
-            result.getBalance(),
-            result.getStatus()
-        );
+        return accountMapper.toResponse(result);
     }
 
     @Transactional
@@ -91,13 +83,7 @@ public class AccountService {
 
         var result = this.repository.save(account);
 
-        return new AccountResponse(
-            result.getCpf(),
-            result.getAgency(),
-            result.getAccountNumber(),
-            result.getBalance(),
-            result.getStatus()
-        );
+        return accountMapper.toResponse(result);
     }
 
     public Optional<Account> findAccountByCpf(String cpf) {
@@ -111,10 +97,6 @@ public class AccountService {
 
         var account = this.repository.findByCpf(cpf).orElseThrow(() -> new AccountNotFoundException());
 
-        return new AccountInfoResponse(
-            account.getAccountNumber(),
-            account.getAgency(),
-            account.getBalance()
-        );
+        return accountMapper.toInfoResponse(account);
     }
 }

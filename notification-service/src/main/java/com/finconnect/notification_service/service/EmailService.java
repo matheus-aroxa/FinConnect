@@ -9,6 +9,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import com.finconnect.notification_service.dto.SendEmailRequest;
 import com.finconnect.notification_service.entity.Email;
+import com.finconnect.notification_service.mapper.EmailMapper;
 import com.finconnect.notification_service.repository.EmailRepository;
 
 @Service
@@ -21,6 +22,9 @@ public class EmailService {
 
     @Autowired
     private EmailRepository emailRepository;
+
+    @Autowired
+    private EmailMapper emailMapper;
 
     @Value("${spring.mail.username}")
     private String origin;
@@ -35,11 +39,7 @@ public class EmailService {
             simpleMailMessage.setSubject(request.subject());
             simpleMailMessage.setText(request.message());
 
-            Email email = new Email();
-            email.setOrigin(origin);
-            email.setDestination(request.destination());
-            email.setSubject(request.subject());
-            email.setContent(request.message());
+            Email email = emailMapper.toEntity(request, origin);
 
             this.emailRepository.save(email);
             javaMailSender.send(simpleMailMessage);

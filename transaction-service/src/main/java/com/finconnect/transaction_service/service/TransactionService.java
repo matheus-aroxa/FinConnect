@@ -19,6 +19,7 @@ import com.finconnect.transaction_service.entity.Transaction;
 import com.finconnect.transaction_service.entity.Type;
 import com.finconnect.transaction_service.feign.AccountClient;
 import com.finconnect.transaction_service.feign.AuthClient;
+import com.finconnect.transaction_service.mapper.TransactionMapper;
 import com.finconnect.transaction_service.repository.TransactionRepository;
 import org.springframework.data.domain.Pageable;
 
@@ -38,6 +39,9 @@ public class TransactionService {
 
     @Autowired
     private ReceiptProducerService receiptProducerService;
+
+    @Autowired
+    private TransactionMapper transactionMapper;
 
     //---------------------------//-------------------------//--------------------------------//------------------
     @Transactional
@@ -80,6 +84,6 @@ public class TransactionService {
         Pageable pageable = PageRequest.of(0, 20, Sort.by("createdAt").descending());
         
         var transactions = this.transactionRepository.findByOriginCpf(cpf, pageable);
-        return new StatementResponse(transactions);
+        return new StatementResponse(transactionMapper.toResponseList(transactions));
     }
 }
